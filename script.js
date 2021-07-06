@@ -1,5 +1,5 @@
 const searchInput = document.querySelector("#searchInput");
-const outputField = document.querySelector(".results");
+var outputField = document.querySelector(".results");
 const titleCheck = document.querySelector("#title");
 const authorCheck = document.querySelector("#author");
 
@@ -25,27 +25,29 @@ searchInput.addEventListener("change", (event) => {
   axios
     .get(requestUrl)
     .then((response) => {
+      console.log("Fetching the search results...");
+      outputField.innerHTML = "";
       let searchResults = response.data.items;
-      console.log(searchResults)
-      searchResults.forEach(element => {
-          bookCard = document.createElement('div');
-          bookCard.id = "bookCard";
-          bookTitle = element.volumeInfo.title;
-          bookAuthor = element.volumeInfo.authors;
-          bookDate = element.volumeInfo.publishedDate.split("-")[0];
-          bookImage = element.volumeInfo.imageLinks.thumbnail;
-          bookLink = element.volumeInfo.infoLink;
-          bookHTML = `<a href=${bookLink}>
+      console.log(searchResults);
+      searchResults.forEach((element) => {
+        bookCard = document.createElement("div");
+        bookCard.id = "bookCard";
+        bookTitle = element.volumeInfo.title;
+        bookAuthor = element.volumeInfo.authors;
+        bookDate = element.volumeInfo.publishedDate.split("-")[0];
+        bookImage = element.volumeInfo.imageLinks.thumbnail;
+        bookLink = element.volumeInfo.infoLink;
+        bookHTML = `<a href=${bookLink}>
           <div class="bookTitle"><h3>${element.volumeInfo.title}</h3></div>
           <div class="bookImage"><img src=${bookImage} alt=${bookTitle}></img></div>
           <p>${bookAuthor}</p>
           <p>${bookDate}</p></a>`;
-          bookCard.innerHTML = bookHTML;
-          outputField.append(bookCard);
+        bookCard.innerHTML = bookHTML;
+        outputField.append(bookCard);
       });
     })
     .catch((err) => {
-        outputField.innerHTML = "<h3>No result found, try again!</h3>"
-        console.log("Couln't fetch any result from the API")
+      outputField.innerHTML = "<h3>No result found, try again!</h3>";
+      console.log("Couln't fetch any result from the API");
     });
 });
